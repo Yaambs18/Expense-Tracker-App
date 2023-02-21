@@ -1,0 +1,41 @@
+#expenses-form{
+    margin: 2rem auto;
+    width: 70%;
+}
+
+.error {
+    background: orangered;
+    color: #fff;
+    padding: 5px;
+    margin: 5px;
+  }
+
+  .delete{
+    background: rgb(224, 81, 81);
+    border-radius: 5px;
+    border: 1px;
+    float: right;
+    padding: 5px;
+  }
+
+  .edit{
+    background: #ccc;
+    border-radius: 5px;
+    border: 1px;
+    float: right;
+    padding: 5px;
+    margin-right: 5px;
+  }
+
+  ul{
+    list-style: none;
+  }
+
+  ul li {
+    padding: 5px;
+    background: #eb07078f;
+    margin: 0.5rem auto;
+    border-radius: 10px;
+    color: rgb(28, 230, 79);
+    width: 80%;
+  }
