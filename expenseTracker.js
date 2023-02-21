@@ -7,9 +7,22 @@ const msg = document.querySelector('.msg');
 
 myForm.addEventListener('submit', onSubmit);
 
+var count = 0;
+// retrieving stored usersDetails from local storage
+var totalExpenseCount = localStorage.length;
+if(totalExpenseCount!=0){
+    count = +Object.keys(localStorage)[0];
+    let i = +Object.keys(localStorage)[totalExpenseCount-1];
+    while(i<=count){
+        let expenseObj_deserialized = JSON.parse(localStorage.getItem(i));
+        console.log(expenseObj_deserialized);
+        showUserOnScreen(expenseObj_deserialized);
+        i++;
+    }
+}
+
 function onSubmit(e){
     e.preventDefault();
-    var count = 0;
     if(expenseDesc.value === '' || expenseAmount.value === ''){
         msg.classList.add('error');
         msg.innerHTML = 'Please enter all fields';
@@ -17,28 +30,29 @@ function onSubmit(e){
         setTimeout(() => msg.remove(), 3000);
     }
     else{
+        var totalExpenseCount = localStorage.length;
+        if(totalExpenseCount==0){
+            count=0;
+        }else{
+            count = +Object.keys(localStorage)[0];
+        }
         count++;
-        console.log(expenseDesc.value);
-        console.log(expenseAmount.value);
-        console.log(category.value);
 
         let expenseObj = {
+            expenseId: count,
             expenseDesc : expenseDesc.value,
-            amout : expenseAmount.value,
+            amount : expenseAmount.value,
             category: category.value,
         }
         let expenseObj_serialized = JSON.stringify(expenseObj);
         localStorage.setItem(count, expenseObj_serialized);
         showUserOnScreen(expenseObj);
-
-        expenseDesc.value = '';
-        expenseAmount.value = '';
     }
 }
 
 function showUserOnScreen(obj){
     const li = document.createElement('li');
-    li.appendChild(document.createTextNode(`${expenseDesc.value} : ${expenseAmount.value} : ${category.value}`));
+    li.appendChild(document.createTextNode(`${obj.expenseDesc} : ${obj.amount} : ${obj.category}`));
 
     // create delete btn element
     var delBtn = document.createElement('button');
@@ -55,17 +69,18 @@ function showUserOnScreen(obj){
     // delete event
     delBtn.onclick = () =>{
         if(confirm('Are you sure ?')){
-            userList.removeChild(li);
-            localStorage.removeItem(obj.email);
+            expenseList.removeChild(li);
+            localStorage.removeItem(obj.expenseId);
         }
     }
 
     // edit event
     edtBtn.onclick = () =>{
-        userList.removeChild(li);
-        localStorage.removeItem(obj.email);
-        nameInput.value = obj.name;
-        emailInput.value = obj.email;
+        expenseList.removeChild(li);
+        localStorage.removeItem(obj.expenseId);
+        expenseDesc.value = obj.expenseDesc;
+        expenseAmount.value = obj.amount;
+        category.value = obj.category;
     }
     
     li.appendChild(delBtn);
