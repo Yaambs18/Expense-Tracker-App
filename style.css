@@ -15,7 +15,7 @@
     border-radius: 5px;
     border: 1px;
     float: right;
-    padding: 5px;
+    padding: 2px;
   }
 
   .edit{
@@ -23,7 +23,7 @@
     border-radius: 5px;
     border: 1px;
     float: right;
-    padding: 5px;
+    padding: 2px;
     margin-right: 5px;
   }
 
@@ -33,7 +33,7 @@
 
   ul li {
     padding: 5px;
-    background: #eb07078f;
+    background: #182ef08f;
     margin: 0.5rem auto;
     border-radius: 10px;
     color: rgb(28, 230, 79);
