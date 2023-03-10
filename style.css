@@ -1,6 +1,13 @@
 #expenses-form{
     margin: 2rem auto;
-    width: 70%;
+    width: 60%;
+}
+
+@media screen and (max-width: 990px) {
+  #expenses-form{
+    margin: 2rem auto;
+    width: 90%;
+}
 }
 
 .error {
@@ -31,7 +38,7 @@
     list-style: none;
   }
 
-  ul li {
+  #expenseList li {
     padding: 5px;
     background: #182ef08f;
     margin: 0.5rem auto;
