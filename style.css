@@ -3,11 +3,20 @@
     width: 60%;
 }
 
+#signup-form{
+  margin: 4rem auto;
+  width: 60%;
+}
+
 @media screen and (max-width: 990px) {
   #expenses-form{
     margin: 2rem auto;
     width: 90%;
-}
+  }
+  #signup-form{
+    margin: 3rem auto;
+    width: 80%;
+  }
 }
 
 .error {
