@@ -6,16 +6,19 @@ async function login(e) {
     };
     try{
         const res = await axios.post('http://localhost:3000/user/login', loginDetails);
+        console.log(res);
         if(res.status === 200){
+            alert(res.data.message);
             console.log(res);
             window.location.href = '../index.html';
         }
         else{
+            console.log(res);
             throw new Error(res);
         }
     }
     catch(error) {
-        document.body.innerHTML += `<h1>Error: ${res.message}</h1>`;
-        console.log(err);
+        document.body.innerHTML += `<h1>Error: ${error.message}</h1>`;
+        console.log(error);
     }
 }
