@@ -16,7 +16,7 @@ async function onSubmit(e) {
         const res = await axios.post('http://localhost:3000/user/signup', userObj);
         if(res.status === 201){
             console.log(res);
-            window.location.href = './index.html';
+            window.location.href = '../Login/login.html';
         }
         else{
             throw new Error(res.status);
