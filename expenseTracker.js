@@ -9,7 +9,8 @@ myForm.addEventListener('submit', onSubmit);
 
 // retrieving stored expenses when DOM loads
 window.addEventListener('DOMContentLoaded', () => {
-    axios.get('http://localhost:3000/expense')
+    const token = localStorage.getItem('token');
+    axios.get('http://localhost:3000/expense', { headers: {'Authorization': token }})
     .then((response) => {
         for(expenseObj of response.data){
             showUserOnScreen(expenseObj);
@@ -35,10 +36,11 @@ function onSubmit(e){
             amount : expenseAmount.value,
             category: category.value,
         }
+        const token = localStorage.getItem('token');
         if(document.querySelector('#submitBtn').value === 'Update'){
             const expenseId = document.querySelector('#expenseId').value;
             axios
-              .put('http://localhost:3000/expense/'+expenseId, expenseObj)
+              .put('http://localhost:3000/expense/'+expenseId, expenseObj, { headers: {'Authorization': token }})
               .then((response) => {
                 showUserOnScreen(response.data);
               })
@@ -49,7 +51,7 @@ function onSubmit(e){
 
         }
         else{
-            axios.post('http://localhost:3000/expense/addExpense', expenseObj)
+            axios.post('http://localhost:3000/expense/addExpense', expenseObj, { headers: {'Authorization': token }})
             .then((response) => {
                 showUserOnScreen(response.data);
             })
@@ -84,7 +86,7 @@ function showUserOnScreen(obj){
     delBtn.onclick = () =>{
         if(confirm('Are you sure ?')){
             axios
-              .delete("http://localhost:3000/expense/" + obj.id)
+              .delete("http://localhost:3000/expense/" + obj.id, { headers: {'Authorization': token }})
               .then((response) => expenseList.removeChild(li))
               .catch((err) => console.log(err));
         }
