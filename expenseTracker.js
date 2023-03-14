@@ -89,7 +89,6 @@ function onSubmit(e){
 }
 
 function showExpensesOnScreen(obj){
-    expenseList.innerHTML = '<h1>Expense List</h1>'
 
     const li = document.createElement('li');
     li.appendChild(document.createTextNode(`${obj.description} : ${obj.amount} : ${obj.category}`));
@@ -152,8 +151,7 @@ function showLeaderBoard() {
         var leaderboardElem = document.getElementById('leaderBoard');
         leaderboardElem.innerHTML += '<h1> Leader Board </<h1>';
         userLeaderBoardArray.data.forEach((userDetails) => {
-            console.log(userDetails);
-            leaderboardElem.innerHTML += (`<li>Name - ${userDetails.user.name} Total Expense - ${userDetails.total_cost || 0} </li>`);
+            leaderboardElem.innerHTML += (`<li>Name - ${userDetails.name} Total Expense - ${userDetails.totalExpenseAmount || 0} </li>`);
         })
     }
     document.getElementById("premiumUser").appendChild(inputElement);
