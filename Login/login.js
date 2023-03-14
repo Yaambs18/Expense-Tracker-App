@@ -6,10 +6,8 @@ async function login(e) {
     };
     try{
         const res = await axios.post('http://localhost:3000/user/login', loginDetails);
-        console.log(res);
         if(res.status === 200){
             alert(res.data.message);
-            console.log(res);
             window.localStorage.setItem('token', res.data.token);
             window.location.href = '../index.html';
         }

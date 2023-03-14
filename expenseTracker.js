@@ -11,11 +11,10 @@ myForm.addEventListener('submit', onSubmit);
 window.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');
     const parsedToken = parseJwt(token);
-    console.log(token);
-    console.log(parsedToken);
 
     if(parsedToken.isPremiumUser){
         showPremiumUser();
+        showLeaderBoard();
     }
 
     axios.get('http://localhost:3000/expense', { headers: {'Authorization': token }})
@@ -90,6 +89,7 @@ function onSubmit(e){
 }
 
 function showExpensesOnScreen(obj){
+    expenseList.innerHTML = '<h1>Expense List</h1>'
 
     const li = document.createElement('li');
     li.appendChild(document.createTextNode(`${obj.description} : ${obj.amount} : ${obj.category}`));
@@ -136,6 +136,30 @@ function showExpensesOnScreen(obj){
     expenseList.appendChild(li);
 }
 
+function showLeaderBoard() {
+
+    const inputElement = document.createElement("input")
+    inputElement.type = "button"
+    inputElement.value = 'Show Leaderboard'
+    inputElement.onclick = async() => {
+        const token = localStorage.getItem('token')
+        const userLeaderBoardArray = await axios.get('http://localhost:3000/premium/leaderboard', { headers: {"Authorization" : token} })
+        console.log(userLeaderBoardArray)
+        if(userLeaderBoardArray.data.length >0){
+            document.getElementById("premiumUser").style.display = 'none';
+        }
+
+        var leaderboardElem = document.getElementById('leaderBoard');
+        leaderboardElem.innerHTML += '<h1> Leader Board </<h1>';
+        userLeaderBoardArray.data.forEach((userDetails) => {
+            console.log(userDetails);
+            leaderboardElem.innerHTML += (`<li>Name - ${userDetails.user.name} Total Expense - ${userDetails.total_cost || 0} </li>`);
+        })
+    }
+    document.getElementById("premiumUser").appendChild(inputElement);
+
+}
+
 document.getElementById('rzp-button1').onclick = async function (e) {
     const token = localStorage.getItem('token');
     const response = await axios.get('http://localhost:3000/purchase/premiummembership', { headers: { 'Authorization': token }});
@@ -154,6 +178,7 @@ document.getElementById('rzp-button1').onclick = async function (e) {
             localStorage.setItem('token', result.data.token);
             
             showPremiumUser();
+            showLeaderBoard();
         }
     };
 
