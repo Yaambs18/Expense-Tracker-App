@@ -10,10 +10,18 @@ myForm.addEventListener('submit', onSubmit);
 // retrieving stored expenses when DOM loads
 window.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');
+    const parsedToken = parseJwt(token);
+    console.log(token);
+    console.log(parsedToken);
+
+    if(parsedToken.isPremiumUser){
+        showPremiumUser();
+    }
+
     axios.get('http://localhost:3000/expense', { headers: {'Authorization': token }})
     .then((response) => {
         for(expenseObj of response.data){
-            showUserOnScreen(expenseObj);
+            showExpensesOnScreen(expenseObj);
         }
     })
     .catch(err => {
@@ -21,6 +29,21 @@ window.addEventListener('DOMContentLoaded', () => {
         console.log(err);
     })
 })
+
+function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
+
+function showPremiumUser(){
+    document.getElementById('rzp-button1').style.display = 'none';
+    document.getElementById('premiumUser').innerHTML = "You are a premium user ";
+}
 
 function onSubmit(e){
     e.preventDefault();
@@ -42,7 +65,7 @@ function onSubmit(e){
             axios
               .put('http://localhost:3000/expense/'+expenseId, expenseObj, { headers: {'Authorization': token }})
               .then((response) => {
-                showUserOnScreen(response.data);
+                showExpensesOnScreen(response.data);
               })
               .catch((err) => {
                 document.body.innerHTML += "Error: Something went wrong!!!!";
@@ -53,7 +76,7 @@ function onSubmit(e){
         else{
             axios.post('http://localhost:3000/expense/addExpense', expenseObj, { headers: {'Authorization': token }})
             .then((response) => {
-                showUserOnScreen(response.data);
+                showExpensesOnScreen(response.data);
             })
             .catch(err => {
                 document.body.innerHTML += 'Error: Something went wrong!!!!';
@@ -66,8 +89,8 @@ function onSubmit(e){
     }
 }
 
-function showUserOnScreen(obj){
-    document.getElementById('rzp-button1').style.display = none;
+function showExpensesOnScreen(obj){
+
     const li = document.createElement('li');
     li.appendChild(document.createTextNode(`${obj.description} : ${obj.amount} : ${obj.category}`));
 
@@ -126,8 +149,11 @@ document.getElementById('rzp-button1').onclick = async function (e) {
                 order_id: options.order_id,
                 payment_id: response.razorpay_payment_id,
             }, { headers: {'Authorization': token } })
-            localStorage.setItem('token', result.data.token);
+            
             alert('You are a Premium User Now');
+            localStorage.setItem('token', result.data.token);
+            
+            showPremiumUser();
         }
     };
 
