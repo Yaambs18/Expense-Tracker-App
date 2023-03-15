@@ -109,7 +109,7 @@ function showExpensesOnScreen(obj){
     delBtn.onclick = () =>{
         if(confirm('Are you sure ?')){
             axios
-              .delete("http://localhost:3000/expense/" + obj.id, { headers: {'Authorization': token }})
+              .delete("http://localhost:3000/expense/" + obj.id, { headers: {'Authorization': localStorage.getItem('token') }})
               .then((response) => expenseList.removeChild(li))
               .catch((err) => console.log(err));
         }
