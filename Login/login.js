@@ -9,7 +9,7 @@ async function login(e) {
         if(res.status === 200){
             alert(res.data.message);
             window.localStorage.setItem('token', res.data.token);
-            window.location.href = '../index.html';
+            window.location.href = '../Expense/index.html';
         }
         else{
             console.log(res);
