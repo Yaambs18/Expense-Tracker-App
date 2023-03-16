@@ -4,10 +4,13 @@ const expenseAmount = document.querySelector('#amount');
 const category = document.querySelector('#category');
 const expenseList = document.querySelector('#expenseList');
 const msg = document.querySelector('.msg');
+const rowsSelection = document.getElementById('rows');
 
 myForm.addEventListener('submit', onSubmit);
 
 const token = localStorage.getItem('token');
+const rows = localStorage.getItem('rows') || rowsSelection.value;
+
 // retrieving stored expenses when DOM loads
 window.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');
@@ -18,7 +21,7 @@ window.addEventListener('DOMContentLoaded', () => {
         showLeaderBoard();
     }
     
-    axios.get('http://localhost:3000/expense', { headers: {'Authorization': token }})
+    axios.get(`http://localhost:3000/expense?size=${rows}`, { headers: {'Authorization': token }})
     .then((response) => {
         for(expenseObj of response.data.expenses){
             showExpensesOnScreen(expenseObj);
@@ -31,6 +34,10 @@ window.addEventListener('DOMContentLoaded', () => {
     })
 })
 
+rowsSelection.addEventListener('change', () => {
+    localStorage.setItem('rows', rowsSelection.value);
+})
+
 function pagination(resData) {
     const div = document.getElementById('pageButtons');
     div.innerHTML = '';
@@ -41,7 +48,7 @@ function pagination(resData) {
         nxtBtn.textContent = resData.nextPage;
         div.appendChild(nxtBtn);
         nxtBtn.onclick = () => {
-            axios.get(`http://localhost:3000/expense?page=${nxtBtn.textContent}`, { headers: {'Authorization': token }}).then((response) => {
+            axios.get(`http://localhost:3000/expense?page=${nxtBtn.textContent}&size=${rows}`, { headers: {'Authorization': token }}).then((response) => {
                 expenseList.innerHTML = "";
                 for(expenseObj of response.data.expenses){
                     showExpensesOnScreen(expenseObj);
@@ -60,7 +67,7 @@ function pagination(resData) {
         prvBtn.textContent = resData.previousPage;
         div.appendChild(prvBtn);
         prvBtn.onclick = () => {
-            axios.get(`http://localhost:3000/expense?page=${prvBtn.textContent}`, { headers: {'Authorization': token }}).then((response) => {
+            axios.get(`http://localhost:3000/expense?page=${prvBtn.textContent}&size=${rows}`, { headers: {'Authorization': token }}).then((response) => {
                 expenseList.innerHTML = "";
                 for(expenseObj of response.data.expenses){
                     showExpensesOnScreen(expenseObj);
