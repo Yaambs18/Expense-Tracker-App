@@ -1,5 +1,5 @@
 #expenses-form{
-    margin: 2rem auto;
+    margin: 1rem auto;
     width: 60%;
 }
 
@@ -11,7 +11,7 @@
 
 @media screen and (max-width: 990px) {
   #expenses-form{
-    margin: 2rem auto;
+    margin: 1rem auto;
     width: 90%;
   }
   #signup-form{

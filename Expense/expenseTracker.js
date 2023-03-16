@@ -17,18 +17,63 @@ window.addEventListener('DOMContentLoaded', () => {
         showPremiumUser();
         showLeaderBoard();
     }
-
+    
     axios.get('http://localhost:3000/expense', { headers: {'Authorization': token }})
     .then((response) => {
-        for(expenseObj of response.data){
+        for(expenseObj of response.data.expenses){
             showExpensesOnScreen(expenseObj);
         }
+        pagination(response.data);
     })
     .catch(err => {
         myForm.innerHTML = '<h1>Error: Something went wrong!!!!</h1>';
         console.log(err);
     })
 })
+
+function pagination(resData) {
+    const div = document.getElementById('pageButtons');
+    div.innerHTML = '';
+    if(resData.hasNextPage){
+        const nxtBtn = document.createElement('button');
+        nxtBtn.classList = 'float-end';
+        nxtBtn.id = 'pageBtn';
+        nxtBtn.textContent = resData.nextPage;
+        div.appendChild(nxtBtn);
+        nxtBtn.onclick = () => {
+            axios.get(`http://localhost:3000/expense?page=${nxtBtn.textContent}`, { headers: {'Authorization': token }}).then((response) => {
+                expenseList.innerHTML = "";
+                for(expenseObj of response.data.expenses){
+                    showExpensesOnScreen(expenseObj);
+                }
+                pagination(response.data);
+            })
+            .catch(err => {
+                myForm.innerHTML = '<h1>Error: Something went wrong!!!!</h1>';
+                console.log(err);
+            })
+        }
+    }
+    if(resData.hasPreviousPage){
+        const prvBtn = document.createElement('button');
+        prvBtn.id = 'pageBtn';
+        prvBtn.textContent = resData.previousPage;
+        div.appendChild(prvBtn);
+        prvBtn.onclick = () => {
+            axios.get(`http://localhost:3000/expense?page=${prvBtn.textContent}`, { headers: {'Authorization': token }}).then((response) => {
+                expenseList.innerHTML = "";
+                for(expenseObj of response.data.expenses){
+                    showExpensesOnScreen(expenseObj);
+                }
+                pagination(response.data);
+            })
+            .catch(err => {
+                myForm.innerHTML = '<h1>Error: Something went wrong!!!!</h1>';
+                console.log(err);
+            })
+        }
+    }
+}
 
 function parseJwt (token) {
     var base64Url = token.split('.')[1];
