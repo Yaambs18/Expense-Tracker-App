@@ -7,6 +7,7 @@ const msg = document.querySelector('.msg');
 
 myForm.addEventListener('submit', onSubmit);
 
+const token = localStorage.getItem('token');
 // retrieving stored expenses when DOM loads
 window.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');
@@ -42,6 +43,7 @@ function parseJwt (token) {
 function showPremiumUser(){
     document.getElementById('rzp-button1').style.display = 'none';
     document.getElementById('premiumUser').innerHTML = "You are a premium user ";
+    document.getElementById('downloadReport').classList = 'btn btn-primary';
 }
 
 function onSubmit(e){
@@ -58,7 +60,6 @@ function onSubmit(e){
             amount : expenseAmount.value,
             category: category.value,
         }
-        const token = localStorage.getItem('token');
         if(document.querySelector('#submitBtn').value === 'Update'){
             const expenseId = document.querySelector('#expenseId').value;
             axios
@@ -194,4 +195,23 @@ document.getElementById('rzp-button1').onclick = async function (e) {
 
         alert('Something went wrong');
     })
+}
+
+downloadReport = async function (e) {
+    try {
+        const response = await axios.get('http://localhost:3000/user/download', { headers: { 'Authorization': token }});
+
+        if(response.status === 201){
+            var a = document.createElement('a');
+            a.href = response.data.fileUrl;
+            a.download = 'expenseReport.csv';
+            a.click();
+        }
+        else {
+            throw new Error(response.data.message)
+        }
+    }
+    catch (err) {
+        alert(err);
+    }
 }
